@@ -1,0 +1,291 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:id="@+id/scrollView"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/bc2"
+    tools:context=".RegisterActivity">
+
+
+
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="48dp"
+        android:text="Personal info"
+        android:textSize="30dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/textView" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@+id/textView">
+        <TextView
+            android:id="@+id/tvName"
+            android:layout_width="141dp"
+            android:textSize="22dp"
+            android:layout_height="wrap_content"
+            android:text="Name" />
+        <EditText
+            android:id="@+id/etName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/etEmail"
+            android:layout_alignStart="@+id/etEmail" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tvEmail"
+            android:layout_width="141dp"
+            android:layout_height="wrap_content"
+            android:text="UserName"
+            android:textSize="22dp"
+            android:layout_below="@+id/etName"
+            android:capitalize="sentences"
+            android:contextClickable="false"
+            />
+        <EditText
+            android:id="@+id/etUserName"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/etName"
+            android:layout_alignLeft="@+id/etContact"
+            android:layout_alignStart="@+id/etContact" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tvContact"
+            android:layout_width="141dp"
+            android:layout_height="wrap_content"
+            android:text="Contact"
+            android:textSize="22dp"
+            android:layout_below="@+id/etEmail"
+            android:contextClickable="false"
+            />
+        <EditText
+            android:id="@+id/etContact"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:phoneNumber="true"
+            android:ems="10"
+            android:maxLength="10"
+            android:layout_below="@id/etEmail"
+            android:layout_alignLeft="@+id/etPass"
+            android:layout_alignStart="@+id/etPass" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tvPass"
+            android:layout_width="141dp"
+            android:layout_height="wrap_content"
+            android:text="Password"
+            android:textSize="22dp"
+            android:layout_below="@+id/etContact"
+            android:contextClickable="false" />
+        <EditText
+            android:id="@+id/etPass"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/etContact"
+            android:layout_toRightOf="@+id/dob"
+            android:layout_toEndOf="@+id/dob" />
+   </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="141dp"
+            android:layout_height="wrap_content"
+            android:text="Date_Of_Birth"
+            android:textSize="22dp"
+            android:id="@+id/dob"
+            android:layout_below="@id/etPass" />
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="date"
+            android:ems="10"
+            android:id="@+id/etDate"
+            android:focusable="false"
+            android:layout_below="@+id/etPass"
+            android:layout_alignRight="@+id/etPass"
+            android:layout_alignEnd="@+id/etPass"
+            android:layout_toRightOf="@+id/dob"
+            android:layout_toEndOf="@+id/dob"
+            android:clickable="true" />
+
+        <DatePicker
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:id="@+id/datePicker" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="141dp"
+            android:layout_height="50dp"
+            android:text="Qualification "
+            android:textSize="22dp"/>
+        <Spinner
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/qualification"
+            android:entries="@array/hobbylist"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="141dp"
+            android:layout_height="wrap_content"
+            android:text="Gender"
+            android:textSize="22dp"/>
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:id="@+id/rgGender">
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Male"
+                android:id="@+id/rbMale"/>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Female"
+                android:id="@+id/rbFemale" />
+        </RadioGroup>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:paddingTop="10dp"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="141dp"
+            android:layout_height="wrap_content"
+            android:text="Hobbies"
+            android:textSize="22dp" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Football"
+            android:id="@+id/cbFootball" />
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Basketball"
+            android:id="@+id/cbBasketball" />
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cricket"
+            android:id="@+id/cbCricket" />
+            </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_width="141dp"
+            android:text="Profile Picture"
+            android:textSize="22dp"
+            android:layout_height="wrap_content" />
+        <ImageView
+            android:id="@+id/imageView"
+            android:src="@drawable/ic_cam"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            />
+        <ImageView
+            android:id="@+id/imgDisplay"
+            android:layout_width="197dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_weight="0.28" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+            <Button
+                android:id="@+id/btnInsert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add Details"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
+            <Button
+                android:id="@+id/btnLogin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="view Details"
+                android:layout_below="@id/btnInsert"
+                android:layout_centerVertical="true"
+                android:layout_centerHorizontal="true" />
+    </LinearLayout>
+
+        <Button
+            android:layout_width="228dp"
+            android:layout_height="wrap_content"
+            android:text="Click here for Login"
+            android:layout_gravity="center"
+            android:id="@+id/btnSignIn"
+            android:onClick="onButtonClick"
+            android:layout_below="@+id/btnLogin"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="228dp"
+        android:layout_height="wrap_content"
+        android:text="View Data in List View"
+        android:layout_gravity="center"
+        android:id="@+id/btnListView"
+        android:onClick="viewDetailsListView"
+        android:layout_below="@+id/btnLogin"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+
+
+</LinearLayout>
+</ScrollView>

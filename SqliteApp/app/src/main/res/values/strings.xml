@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">SqliteApp</string>
+    <string name="Feedbacktype1">SSC</string>
+    <string name="Feedbacktype2">HSC</string>
+    <string name="Feedbacktype3">MCA</string>
+    <string name="TextView">TextView</string>
+    <string name="EditText">EditText</string>
+    <string name="Button">Button</string>
+    <string name="emptyString" />
+    <string name="emptyString1" />
+</resources>

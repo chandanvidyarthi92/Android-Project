@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="hobbylist">
+        <item>@string/Feedbacktype1</item>
+        <item>@string/Feedbacktype2</item>
+        <item>@string/Feedbacktype3</item>
+    </string-array>
+
+    <string-array name="controls">
+        <item>@string/TextView</item>
+        <item>@string/EditText</item>
+        <item>@string/Button</item>
+    </string-array>
+</resources>
