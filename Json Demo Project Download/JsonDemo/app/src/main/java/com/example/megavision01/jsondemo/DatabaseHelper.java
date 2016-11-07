@@ -92,5 +92,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor res =db.rawQuery("select * from " + TABLE_NAME, null);
         return res;
     }
+    public Cursor getAllData1()
+    {
+        SQLiteDatabase db= this.getWritableDatabase();
+        Cursor res =db.rawQuery("select * from " + TABLE_NAME1, null);
+        return res;
+    }
 
 }

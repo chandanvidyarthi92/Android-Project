@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="105dp">
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_alignParentLeft="true"
+        android:padding="4dp"
+        android:src="@drawable/bc2"
+        android:layout_height="100dp"
+        android:id="@+id/img"/>
+    <TextView
+        android:layout_width="170dp"
+        android:layout_height="100dp"
+        android:text="Film name"
+        android:layout_toRightOf="@+id/img"
+        android:gravity="center"
+        android:textSize="15dp"
+        android:textStyle="italic"
+        android:id="@+id/fname"/>
+    <TextView
+        android:layout_width="400dp"
+        android:layout_height="100dp"
+        android:text="Film name"
+        android:layout_toRightOf="@+id/fname"
+        android:gravity="center"
+        android:textSize="15dp"
+        android:textStyle="italic"
+        android:id="@+id/dname"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@id/dname"
+        android:background="@color/colorPrimary"
+        android:layout_marginBottom="2dp"
+        android:layout_alignParentBottom="false"
+        android:layout_marginTop="3dp"/>
+</RelativeLayout>

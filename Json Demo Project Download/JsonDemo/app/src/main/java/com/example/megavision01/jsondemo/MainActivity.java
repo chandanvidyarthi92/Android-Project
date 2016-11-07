@@ -1,5 +1,6 @@
 package com.example.megavision01.jsondemo;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
@@ -33,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private ProgressDialog pDialog;
     private ListView lv;
     String a_id;
-
+    Button viewButton;
     // URL to get contacts JSON
     private static String urlProject = "http://androidworkingapp.site88.net/projectlist.php";
     private static String urlForm = "http://androidworkingapp.site88.net//formdesign.php";
@@ -50,8 +51,38 @@ public class MainActivity extends AppCompatActivity {
         sp1 = (Spinner) findViewById(R.id.sp1);
         //lv = (ListView) findViewById(R.id.list);
         new GetContacts().execute();
+        viewButton= (Button) findViewById(R.id.btnView);
+        viewButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Cursor res = myDb.getAllData1();
+                if (res.getCount() == 0) {
+                    Toast.makeText(MainActivity.this, "Nothing Found !!", Toast.LENGTH_SHORT).show();
+                    return;
+                } else {
+                    StringBuffer buffer = new StringBuffer();
+                    while (res.moveToNext()) {
+                        buffer.append("form Id  :  " + res.getString(0) + "\n");
+                        buffer.append("Project Id  :  " + res.getString(1) + "\n");
+                        buffer.append("From name  :  " + res.getString(2) + "\n");
+                        buffer.append("Form type   :  " + res.getString(3) + "\n");
+                        buffer.append("Value  :  " + res.getString(4) + "\n");
+//                        buffer.append("Date  :  " + res.getString(5) + "\n");
+                        // buffer.append("Qualification  :  " + res.getString(6) + "\n");
+                        // buffer.append("Gender  :  " + res.getString(7) + "\n");
+                        // buffer.append("Hobby  :  " + res.getString(8) + "\n");
+
+                    }
+                    showMessage("Data", buffer.toString());
+                }
+            }
+        });
+
 
     }
+
+
+
 
 
     private class GetContacts extends AsyncTask<Void, Void, Void> {
@@ -203,7 +234,7 @@ public class MainActivity extends AppCompatActivity {
 
                        do {
                             a_id = cursor.getString(0);
-                           Toast.makeText(parent.getContext(), "Selected: " + a_id, Toast.LENGTH_LONG).show();
+                           //Toast.makeText(parent.getContext(), "Selected: " + a_id, Toast.LENGTH_LONG).show();
                            Intent intent = new Intent(MainActivity.this,DynamicForm.class);
                            intent.putExtra("id", a_id);
 
@@ -230,5 +261,14 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
+
+
+    public void showMessage(String title, String msg)
+    {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(title);
+        builder.setMessage(msg);
+        builder.show();
+    }
     }
 

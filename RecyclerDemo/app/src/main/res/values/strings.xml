@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">RecyclerDemo</string>
+    <string-array name="film_name">
+        <item>"specture"</item>
+        <item>"Inside Out"</item>
+        <item>"Welcome"</item>
+        <item>"carol"</item>
+        <item>"specture II"</item>
+    </string-array>
+    <string-array name="diretor_name">
+        <item>"abc"</item>
+        <item>"ram"</item>
+        <item>"raju"</item>
+        <item>"carol"</item>
+        <item>"iyko"</item>
+    </string-array>
+</resources>

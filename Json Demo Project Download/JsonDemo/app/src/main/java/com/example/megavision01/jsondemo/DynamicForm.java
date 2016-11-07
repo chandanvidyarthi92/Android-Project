@@ -3,10 +3,12 @@ package com.example.megavision01.jsondemo;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.renderscript.Sampler;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -34,6 +36,16 @@ import java.util.HashMap;
 import java.util.List;
 
 public class DynamicForm extends AppCompatActivity {
+
+    private List<EditText> editTextLongList = new ArrayList<EditText>();
+    private List<TextView> textViewList = new ArrayList<TextView>();
+    private List<Spinner> textSpinnerList = new ArrayList<Spinner>();
+    private List<CheckBox> textCheckBoxList = new ArrayList<CheckBox>();
+    private List<RadioButton> textRadioButtonList = new ArrayList<RadioButton>();
+    private List<RadioGroup> textRadioGroupList = new ArrayList<RadioGroup>();
+    private List<RadioButton> textSecRadioButtonList = new ArrayList<RadioButton>();//14june
+    private List<RadioGroup> textSecRadioGroupList = new ArrayList<RadioGroup>();
+
     LinearLayout.LayoutParams fittype, textLayout;
     private int year;
     private int month;
@@ -73,30 +85,6 @@ public class DynamicForm extends AppCompatActivity {
         LinearLayout formLayout = new LinearLayout(this);
         formLayout.setOrientation(LinearLayout.VERTICAL);
         scrollView.addView(formLayout);
-/*
-        LinearLayout formLayoutChild = new LinearLayout(this);
-        formLayout.setOrientation(LinearLayout.VERTICAL);
-
-        LinearLayout formLayoutChild1 = new LinearLayout(this);
-        formLayout.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout formLayoutChild2 = new LinearLayout(this);
-        formLayout.setOrientation(LinearLayout.VERTICAL);
-
-        LinearLayout formLayoutChild3 = new LinearLayout(this);
-        formLayout.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout formLayoutChild4 = new LinearLayout(this);
-        formLayout.setOrientation(LinearLayout.VERTICAL);
-        LinearLayout formLayoutChild5 = new LinearLayout(this);
-        formLayout.setOrientation(LinearLayout.VERTICAL);*/
-
-
-
-        /*formLayout.addView(formLayoutChild);
-        formLayout.addView(formLayoutChild1);
-        formLayout.addView(formLayoutChild3);
-        formLayout.addView(formLayoutChild4);
-        formLayout.addView(formLayoutChild5);*/
-
 
         fittype = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         fittype.setMargins(10, 0, 10, 0);
@@ -104,6 +92,7 @@ public class DynamicForm extends AppCompatActivity {
         textLayout.setMargins(10, 0, 10, 0);
         try {
             String id = getIntent().getStringExtra("id");
+
             DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
             SQLiteDatabase db1 = databaseHelper.getWritableDatabase();
             Cursor cursor = db1.rawQuery("select * from myInfo1 where P_ID='"+id+"'", null);
@@ -205,8 +194,31 @@ public class DynamicForm extends AppCompatActivity {
         submit.setOnClickListener(new View.OnClickListener() {
     @Override
     public void onClick(View v) {
-        String abc = etUsername.getText().toString();
-        Log.d("abcValue",abc);
+        String idd= getIntent().getStringExtra("id");
+        Toast.makeText(DynamicForm.this,"id is "+idd,Toast.LENGTH_SHORT).show();
+        DatabaseHelper dbhs = new DatabaseHelper(getApplicationContext());
+        SQLiteDatabase db = dbhs.getWritableDatabase();
+        ContentValues values = new ContentValues();
+
+        //String[] strings = new String[editTextLongList.size()];
+        //String abc = etUsername.getText().toString();
+        /* for (int i = 0; i<editTextLongList.size(); i++){
+            strings[i] = editTextLongList.get(i).getText().toString();
+            Toast.makeText(getBaseContext(),strings[i]+"edit",Toast.LENGTH_LONG).show();
+            Log.d("kjkj", "" + strings[i]);
+            //values.put();
+        }*/
+
+        for (EditText editLongText : editTextLongList) {
+            int id_l=editLongText.getId();
+
+            String slnew=editLongText.getText().toString();
+            //Toast.makeText(getBaseContext(),slnew+"",Toast.LENGTH_LONG).show();
+            Log.d("fa",slnew);
+            //values.put("f_values",slnew);
+            //db.insert("myInfo1", null, values);
+            //db.update("myInfo1", values, "ID = ?", new String[]{"2"});
+        }
     }
 });
 
@@ -219,7 +231,7 @@ public class DynamicForm extends AppCompatActivity {
         //textView.setHint(uname);
         textView.setText(label);
         textView.setLayoutParams(textLayout);
-        //  loginLayout.addView(textView);
+        textViewList.add(textView);
         return textView;
     }
 
@@ -232,6 +244,7 @@ public class DynamicForm extends AppCompatActivity {
         //dateDialog();*/
         editText.setLayoutParams(fittype);
         editText.setHint(name);
+        editTextLongList.add(editText);
         return editText;
     }
 
@@ -265,6 +278,7 @@ public class DynamicForm extends AppCompatActivity {
             qualifiactionSpinner.setAdapter(adapter);
         }
         qualifiactionSpinner.setLayoutParams(fittype);
+        textSpinnerList.add(qualifiactionSpinner.getSelectedItemPosition(), qualifiactionSpinner);
         return qualifiactionSpinner;
     }
 
@@ -283,6 +297,7 @@ public class DynamicForm extends AppCompatActivity {
             radioButton[i].setTextSize(22);
             radioGroup.addView(radioButton[i]);
         }
+        textSecRadioGroupList.add(radioGroup);
         return radioGroup;
     }
 
@@ -292,6 +307,7 @@ public class DynamicForm extends AppCompatActivity {
         checkBox.setId(a_id);
         hobby = (CheckBox) findViewById(checkBox.getId());
         //textCheckBoxList.add(checkBox);
+        textCheckBoxList.add(checkBox);
         return checkBox;
     }
 
@@ -345,273 +361,20 @@ public class DynamicForm extends AppCompatActivity {
     };
     }
 
-
-    }
-
-
+  /*  public void saveData(){
+        try{
 
 
 
-        /*ScrollView scrollView = new ScrollView(this);
-        scrollView.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT));
+            }catch (Exception e)
+            {
+                Log.d("Error",e.toString());
+            }
 
-
-        loginLayout = new LinearLayout(this);
-        loginLayout.setOrientation(LinearLayout.VERTICAL);
-        loginLayout.setBackgroundResource(R.drawable.bc2);
-        LinearLayout layout1 = new LinearLayout(this);
-        layout1.setOrientation(LinearLayout.HORIZONTAL);
-        LinearLayout layout2 = new LinearLayout(this);
-        layout2.setOrientation(LinearLayout.HORIZONTAL);
-        LinearLayout layout3 = new LinearLayout(this);
-        layout3.setOrientation(LinearLayout.HORIZONTAL);
-        LinearLayout layout4 = new LinearLayout(this);
-        layout4.setOrientation(LinearLayout.HORIZONTAL);
-        LinearLayout layout5 = new LinearLayout(this);
-        layout5.setOrientation(LinearLayout.HORIZONTAL);
-        LinearLayout layout1 = new LinearLayout(this);
-        layout1.setOrientation(LinearLayout.HORIZONTAL);
-
-        loginLayout.addView(layout1);
-        sp1 = new Spinner(this);
-        sp1.setLayoutParams(new LinearLayout.LayoutParams(220, LinearLayout.LayoutParams.WRAP_CONTENT));
-        Button btnAdd = new Button(this);
-        btnAdd.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        sp1.setId(1);
-        btnAdd.setId(2);
-        btnAdd.setText("Add");
-        layout1.addView(sp1);
-        layout1.addView(btnAdd);*//**//*
-
-        String[] str_name_type={"TextView","EditText","Dropdown","Radio","CheckBox"};
-         String[] str_value = {"Male","Female"};
-        String[] str_name_value = {"ck1","ck2","ck3"};
-
-        scrollView.addView(loginLayout);
-        loginLayout.addView(layout1);
-        loginLayout.addView(layout2);
-        loginLayout.addView(layout3);
-        loginLayout.addView(layout4);
-        loginLayout.addView(layout5);
-        if(str_name_type[0] == "TextView")
-        {
-          layout1.addView(textView(1, "uname", ""));
-        }
-        if(str_name_type[1] == "EditText")
-        {
-            layout2.addView(textView(1, "uname", "Username"));
-            layout2.addView(editLongText(1, "fsd"));
-        }
-
-        if(str_name_type[2] == "Dropdown")
-        {
-            layout3.addView(textView(1, "uname", "Qualification"));
-            layout3.addView(spinner(1));
-        }
-        if(str_name_type[3] == "Radio")
-        {
-            layout4.addView(textView(1, "uname", "Gender"));
-            layout4.addView(radioGroup(1,"male,female,other"));
-        }
-
-        setContentView(scrollView);
-
-
-
+    }*/
 
 }
-    public void layoutMethod(){
-        layout12 = new LinearLayout[count];
-        for(int i = 0; i< count;i++) {
-            layout12[i] = new LinearLayout(this);
-            loginLayout.addView(layout12[i]);
-            layout12[i].setOrientation(LinearLayout.HORIZONTAL);
-        }
-    }
-
-    public void textView() {
-        TextView[] textView = new TextView[count];
-        for (int i = 0; i < count; i++) {
-            textView[i] = new TextView(this);
-            textView[i].setText("TextView");
-            textView[i].setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-            layout12[i].addView(textView[i]);
-        }
-    }
-    public void editText()
-    {
-
-        EditText[] editText = new EditText[count];
-        for(int i = 0; i< count; i++) {
-
-            editText[i] = new EditText(this);
-            editText[i].setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-            layout12[i].addView(editText[i]);
-        }
-    }
 
 
-    private LinearLayout linearLayout(int a_id) {
-
-        LinearLayout linearLayout = new LinearLayout(this);
-        LinearLayout.LayoutParams params =
-                new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT);
-        linearLayout.setLayoutParams(params);
-        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
-        return linearLayout;
-    }
-
-    private TextView textView(int hint,String uname ,String setText) {
-        TextView textView = new TextView(this);
-        textView.setId(hint);
-        textView.setTextSize(1, 20);
-        textView.setHint(uname);
-        textView.setText(setText);
-      //  loginLayout.addView(textView);
-        return textView;
-    }
-
-    private EditText editLongText(int a_id, String settext) {
-        EditText editLongText = new EditText(this);
-        editLongText.setId(a_id);
-        editLongText.setHint(settext);
-        editLongText.setTextSize(1, 20);
-        editLongText.setGravity(Gravity.TOP);
-        editLongText.setHeight(100);
-        editLongText.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        return editLongText;
-    }
-
-    private Spinner spinner(int a_id) {
-        Spinner spinner = new Spinner(this);
-        spinner.setId(a_id);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.hobbylist, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
-        return spinner;
-    }
-
-    private RadioGroup radioGroup(int a_id,String strvalue) {
-        RadioGroup radioGroup = new RadioGroup(this);
-            // radioButton.setText(strvalue);
-            radioGroup.setId(a_id);
-        radioGroup.setOrientation(LinearLayout.HORIZONTAL);
-            radioGroup.clearCheck();
-            String[] str_chk1 = strvalue.split(",");
-            for (int i = 0; i < str_chk1.length; i++) {
-                radioGroup.addView(radioButton(a_id,str_chk1[i]));
-            }
-
-        RadioButton[] rb = new RadioButton[5];
-        RadioGroup rg = new RadioGroup(this); //create the RadioGroup
-        rg.setOrientation(RadioGroup.HORIZONTAL);//or RadioGroup.VERTICAL
-        for (int i=0; i<5; i++) {
-            rb[i] = new RadioButton(this);
-            rb[i].setText(" " + ContactsActivity.phonetype.get(i)
-                    + "    " + ContactsActivity.phone.get(i));
-            rb[i].setId(i + 100);
-            rg.addView(rb[i]);
-        }
-        return rb;
-    }
-
-    private RadioButton radioButton(int a_id,String strvalue) {
-
-        RadioButton radioButton = new RadioButton(this);
-        radioButton.setText(strvalue);
-        radioButton.setId(a_id);
-        return radioButton;
-    }
-
-
-
-    private CheckBox checkBox(int a_id,String strvalue) {
-
-        CheckBox checkBox = new CheckBox(this);
-        checkBox.setText(strvalue);
-        checkBox.setId(a_id);
-        return checkBox;
-    }
-
-    private CheckBox checkBox(int a_id,String strvalue,String settext) {
-
-        CheckBox checkBox = new CheckBox(this);
-        checkBox.setText(strvalue);
-        checkBox.setId(a_id);
-        if(settext.equals("null"))
-        {
-            checkBox.setChecked(false);
-        }
-        else
-        {
-            checkBox.setChecked(true);
-        }
-        textCheckBoxList.add
-
-                (checkBox);
-
-
-        return checkBox;
-    }
-   private Spinner spinner(int a_id,String strvalue,String matchvalue) {
-        Spinner spinner = new Spinner(this);
-        spinner.setId(a_id);
-        List<String> list = new ArrayList<String>();
-        try{
-            String [] str_chk1=strvalue.split(",");
-            list.add("Select");
-            int selectspinner=0;
-            for(int i=0;i<str_chk1.length;i++)
-            {
-                list.add(str_chk1[i]);
-                if (str_chk1[i].equals(matchvalue))
-                {
-
-                    selectspinner=i+1;
-                }
-            }
-            textSpinnerList.add(spinner.getSelectedItemPosition(),spinner);
-            if (selectspinner>0)
-            {
-                spinner.setSelection(selectspinner);
-            }
-        }catch(Exception e)
-        {
-            Toast.makeText(getApplicationContext(), "Error code: fd814", Toast.LENGTH_SHORT).show();
-            System.out.println("  EXCEPTION fd814=="+e);
-        }
-        //spinner=spinner.getSelectedItemPosition();
-        return spinner;
-    }
-
-
-   private RadioButton radioButton(int hint,int a_id,String strvalue,String matchvalue) {   //965
-
-        RadioButton radioButton = new RadioButton(this);
-        radioButton.setText(strvalue);
-        radioButton.setId(hint);
-        textRadioButtonList.add(radioButton);
-        return radioButton;
-    }
-
-   private CheckBox checkBox(int a_id,String strvalue) {
-
-        CheckBox checkBox = new CheckBox(this);
-        checkBox.setText(strvalue);
-        checkBox.setId(a_id);
-        textCheckBoxList.add(checkBox);
-        return checkBox;
-    }
-
-
-
-    private ImageView imageView(String strvalue) {
-
-    }
-*/
 
 

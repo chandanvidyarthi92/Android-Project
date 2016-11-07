@@ -644,13 +644,13 @@ public void updateData(){
             }
         });
     }
-    public void showMessage(String title, String msg)
-    {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(title);
-        builder.setMessage(msg);
-        builder.show();
-    }
+        public void showMessage(String title, String msg)
+        {
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(title);
+            builder.setMessage(msg);
+            builder.show();
+        }
    /* public void onButtonClick(View v)
     {
     Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
