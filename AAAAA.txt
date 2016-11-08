@@ -1,0 +1,701 @@
+package com.example.dharm.manualapp;
+
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.ProgressDialog;
+import android.content.Context;
+import android.database.Cursor;
+import android.os.AsyncTask;
+import android.provider.MediaStore;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
+import android.widget.ScrollView;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+
+public class FormActivity extends AppCompatActivity {
+
+    LinearLayout.LayoutParams fittype,textLayout;
+    private int year,year2;
+    private int month,month2;
+    private int day,day2;
+    public static final int DATE_DIALOG_ID = 999;
+    //CheckBoxGroupView group;
+    DatePicker dpResult;
+    Context ctx;
+    AttributeSet ast;
+String datavalue;
+    int project_ID;
+    //String name, qualification, dob,gender;
+    int id;
+    String name;
+    String type;
+    String options;
+    String formId,projectId, formLabel , formType , formOptions;
+    StringBuilder hobbies;
+    DatabaseHelper myDB;
+    Cursor res;
+    String radioValue;
+    private ProgressDialog pDialog;
+    LinearLayout formLayout;
+    Button submit;
+
+
+
+    DatePickerDialog.OnDateSetListener datePickerListener;
+
+    String TAG = FormActivity.class.getSimpleName();
+    private List<EditText> editTextLongList = new ArrayList<EditText>();
+    private List<String> spinnersValue = new ArrayList<String>();
+    private List<RadioButton> radioButtonValue = new ArrayList<RadioButton>();
+    private List<RadioGroup> radioGroupsList = new ArrayList<RadioGroup>();
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+
+        myDB = new DatabaseHelper(this);
+        project_ID = Integer.parseInt(getIntent().getStringExtra("projectId"));
+       // Log.d(TAG,project_ID + "Project Id value");
+
+
+       // setContentView(R.layout.activity_form);
+  /*      final EditText[] etname = new EditText[1];
+        final EditText[] etDOB = new EditText[1];
+        final Spinner[] value = new Spinner[1];
+        final RadioGroup genderValue;*/
+
+       //int[] id = {1,2,3,4,5};
+        final String[] label = {"Name","DOB","Qualifiaction","Gender","Hobbies"};
+        //String[] type = {"text", "date", "dropdown","radio","checkbox"};
+        //final String option = "SSC,HSC,MCA";
+        final String optionRadio = "Male,Female,other";
+        String optionCheckBox = "FootBall,BasketBall,Cricket";
+
+
+
+
+
+        formLayout = new LinearLayout(this);
+        formLayout.setOrientation(LinearLayout.VERTICAL);
+
+
+
+        LinearLayout formLayoutChild = new LinearLayout(this);
+       // formLayout.setOrientation(LinearLayout.VERTICAL);
+        ScrollView scrollView = new ScrollView(this);
+
+
+
+
+       /* LinearLayout formLayoutChild1 = new LinearLayout(this);
+        formLayout.setOrientation(LinearLayout.VERTICAL);
+
+        LinearLayout formLayoutChild3 = new LinearLayout(this);
+        formLayout.setOrientation(LinearLayout.VERTICAL);
+
+        LinearLayout formLayoutChild4 = new LinearLayout(this);
+        formLayout.setOrientation(LinearLayout.VERTICAL);
+
+        LinearLayout formLayoutChild5 = new LinearLayout(this);
+        formLayout.setOrientation(LinearLayout.VERTICAL);
+
+        LinearLayout formLayoutChild6 = new LinearLayout(this);
+        formLayout.setOrientation(LinearLayout.VERTICAL);*/
+
+        //group = new CheckBoxGroupView(ctx,ast);
+
+
+      fittype = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        fittype.setMargins(20,0,20,0);
+        textLayout = new LinearLayout.LayoutParams(150, LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        Cursor cursor = myDB.getForm(project_ID);
+      //  Log.d(TAG,project_ID + "Project Id value");
+
+            if(cursor.getCount()==0) {
+                new GetForms().execute();
+                
+           //     Log.d(TAG, formId + " Form Id for afte the GetForms");
+            }
+            else {
+                try {
+
+                    //  Cursor cursor = myDB.getSingleProject(project_ID+"");
+
+
+                    myDB = new DatabaseHelper(getBaseContext());
+                    res = myDB.getForm(project_ID);
+                    Log.d("Values", project_ID + " ");
+                    Log.d(TAG, res + " value");
+
+                    if (res.moveToFirst()) {
+                        Log.d("Values", id + name + type + " ");
+                        do {
+                            //Toast.makeText(getBaseContext(),res.getString(1).toString() + res.getString(2).toString() +res.getString(3).toString(),Toast.LENGTH_LONG).show();
+                            //Log.d("username",res.getString(1));
+                            //Log.d("Values1",id + name + type+ " ");
+
+                            id = res.getInt(0);
+                            Log.d("Valueid", id + " ");
+                            name = res.getString(2).toString();
+                            Log.d("Valuename", name + " ");
+                            type = res.getString(3).toString();
+                            Log.d("Valuetype", type + " ");
+                            options = res.getString(4);
+                            Log.d("Valueoptions", options + " ");
+
+                            // Log.d("Value3",type+ " ");
+
+
+                            if (type.equals("text")) {
+                                formLayout.addView(textView(name));
+                                formLayout.addView(editText(name, id));
+
+                            }
+                            if (type.equals("dropdown")) {
+                                formLayout.addView(textView(name));
+                                formLayout.addView(qualifiaction(options, id));
+
+                            }
+                            if (type.equals("date")) {
+                                formLayout.addView(textView(name));
+                                formLayout.addView(dateEditText(id));
+
+                            }
+
+                            if (type.equals("radio")) {
+
+                                formLayout.addView(textView(name));
+                                formLayout.addView(radiogroup(options, id));
+                            }
+                            if (type.equals("checkbox")) {
+
+                                formLayout.addView(textView(name));
+                                String[] checkBoxValue = options.split(",");
+                                for (int i = 0; i < checkBoxValue.length; i++) {
+
+                                    formLayout.addView(checkBox(checkBoxValue[i], 300 * i));
+                                }
+                            }
+
+
+                        }
+                        while (res.moveToNext());
+                    } else
+                        Log.d(TAG, "No res value");
+
+
+                } catch (Exception e) {
+                    Log.d("TAG", "username" + e.toString());
+                }
+            }
+        if(cursor.getCount()==0){
+
+
+            //formId,projectId, formLabel , formType , formOptions;
+         /*   if (formType.equals("text")) {
+                formLayout.addView(textView(formLabel));
+                formLayout.addView(editText(formLabel, Integer.parseInt(formId)));
+
+            }
+            if (formType.equals("dropdown")) {
+                formLayout.addView(textView(formLabel));
+                formLayout.addView(qualifiaction(formLabel, Integer.parseInt(formId)));
+
+            }
+            if (formType.equals("date")) {
+                formLayout.addView(textView(formLabel));
+                formLayout.addView(dateEditText(id));
+
+            }
+
+            if (formType.equals("radio")) {
+
+                formLayout.addView(textView(formLabel));
+                formLayout.addView(radiogroup(options, id));
+            }
+            if (formType.equals("checkbox")) {
+
+                formLayout.addView(textView(formLabel));
+                String[] checkBoxValue = options.split(",");
+                for (int i = 0; i < checkBoxValue.length; i++) {
+
+                    formLayout.addView(checkBox(checkBoxValue[i], 300 * i));
+                }
+            }*/
+        }
+       // formLayoutChild6.addView(submit);
+        submit = new Button(this);
+        submit.setText("Submit");
+        submit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //Toast.makeText(getBaseContext(),radioGroupsList.size()+" Radio value",Toast.LENGTH_LONG).show();
+
+             /*   boolean isInserted = myDB.insertRecord(projectId, 1);
+                if (isInserted == true) {
+                    Log.d(TAG, projectId + formLabel + formType + formOptions + "");
+                } else {
+                    Log.d(TAG, "Not inserted Project");
+                }*/
+            /*    String[] strings = new String[editTextLongList.size()];
+                for(int i=0; i < editTextLongList.size(); i++){
+                    strings[i] = editTextLongList.get(i).getText().toString();
+                    Toast.makeText(getBaseContext(), strings[i] + "Edittext", Toast.LENGTH_LONG).show();
+
+                }*/
+           //     Toast.makeText(getBaseContext(), /*strings1[i]*/ radioValue + "radio", Toast.LENGTH_LONG).show();
+
+                saveData();
+            /*    String[] strings1 = new String[radioButtonValue.size()];
+                for(int i=0; i < radioButtonValue.size(); i++){
+                    strings1[i] = radioButtonValue.get(i).getText().toString();
+
+                }
+*/
+
+            }
+        });
+
+        formLayout.addView(submit);
+        scrollView.addView(formLayout);
+
+        setContentView(scrollView);
+
+    }
+
+
+
+
+
+    private class GetForms extends AsyncTask<Void, Void, Void>  {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            // Showing progress dialog
+            pDialog = new ProgressDialog(FormActivity.this);
+            pDialog.setMessage("Please wait...");
+            pDialog.setCancelable(false);
+            pDialog.show();
+
+        }
+
+        @Override
+        protected Void doInBackground(Void... arg0) {
+            HttpHandler sh = new HttpHandler();
+            // Making a request to url and getting response
+
+            String jsonFormStr = sh.formDataCall(project_ID);
+            Log.d(TAG, "Response from url2" + jsonFormStr);
+            if (jsonFormStr != null) {
+                try {
+
+                    JSONObject jsonFormObject = new JSONObject(jsonFormStr);
+
+                    // Getting JSON Array node
+
+
+
+                    JSONArray form = jsonFormObject.getJSONArray("data");
+                    for(int i = 0 ; i<form.length();i++){
+
+                        JSONObject listForm = form.getJSONObject(i);
+
+                         formId = listForm.getString("fid");
+                        projectId = listForm.getString("proj_id");
+                       // Log.d(TAG,projectId+ "Project Id");
+                         formLabel = listForm.getString("label");
+                         formType = listForm.getString("type");
+                         formOptions = listForm.getString("options");
+                        if(formOptions.equals("null")) {
+                            formOptions = null;
+                        }
+                        Log.d(TAG, projectId + formLabel + formType + formOptions + "Project value retived");
+
+                        Cursor cursor = myDB.getFormAdd(Integer.parseInt(formId));
+
+                        if(cursor.getCount() == 0) {
+                            boolean isInserted = myDB.insertForm(Integer.parseInt(projectId), formLabel, formType, formOptions);
+                            if (isInserted == true) {
+                                Log.d(TAG, projectId + formLabel + formType + formOptions + "");
+                            } else {
+                                Log.d(TAG, "Not inserted Project");
+                            }
+                        }
+
+
+
+                    }
+
+
+                } catch (final JSONException e) {
+                    Log.e(TAG, "Json parsing error: " + e.getMessage());
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getApplicationContext(),
+                                    "Json parsing error: " + e.getMessage(),
+                                    Toast.LENGTH_LONG)
+                                    .show();
+                        }
+                    });
+
+                }
+            } else {
+                Log.e(TAG, "Couldn't get json from server.");
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(getApplicationContext(),
+                                "Couldn't get json from server. Check LogCat for possible errors!",
+                                Toast.LENGTH_LONG)
+                                .show();
+                    }
+                });
+
+            }
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void result) {
+            super.onPostExecute(result);
+            // Dismiss the progress dialog
+
+            Log.d(TAG,result+"Getform data");
+
+            if (pDialog.isShowing())
+                pDialog.dismiss();
+            /**
+             * Updating parsed JSON data into ListView
+             * */
+
+        }
+
+    }
+
+
+
+
+
+
+
+
+
+/*    if(type[0].equals("text")){
+
+        formLayoutChild.addView(textView(label[0]));
+        formLayoutChild.addView(editText(label[0],id[0]));
+        //  name = editText(label[0],id[0]).getText().toString();
+        boolean insertData =  myDb.insertForm(1, "Name", "text", null);
+        //nsertForm(int id,String name, String formtype, String values
+        if(insertData == true){
+            Log.d(TAG,"Data Inserted ");
+        }
+        else
+            Log.d(TAG,"Data Not Inserted ");
+
+    }
+
+    if(type[1].equals("date")){
+
+        // setCurrentDate(editText(label[1],id[1]));
+        //addListerOnButton(editText(label[1],id[1]));
+
+        formLayoutChild3.addView(textView(label[1]));
+        formLayoutChild3.addView(editText(label[1],id[1]));
+    }
+    if(type[2].equals("dropdown")){
+
+        formLayoutChild1.addView(textView(label[2]));
+        formLayoutChild1.addView(qualifiaction(option,id[2]));
+
+        // editText(label[0],id[0]);
+    }
+    if(type[3].equals("radio")){
+
+        formLayoutChild4.addView(textView(label[3]));
+        formLayoutChild4.addView(radiogroup(optionRadio,id[3]));
+    }
+
+    if(type[4].equals("checkbox")){
+
+        formLayoutChild5.addView(textView(label[4]));
+        String[] checkBoxValue = optionCheckBox.split(",");
+        for(int i = 0; i<checkBoxValue.length;i++) {
+
+            formLayoutChild5.addView(checkBox(checkBoxValue[i],300*i));
+        }
+    }*/
+
+
+
+
+
+
+
+
+
+    private TextView textView(String label ) {
+        TextView textView = new TextView(this);
+        //textView.setId(hint);
+        textView.setTextSize(20);
+        //textView.setHint(uname);
+        textView.setText(label);
+        textView.setLayoutParams(textLayout);
+        //  loginLayout.addView(textView);
+        return textView;
+    }
+
+ /*   private LinearLayout linearLayout(int a_id,String uname,String iconname)
+    {
+
+        LinearLayout linearLayout = new LinearLayout(this);
+        @SuppressWarnings("deprecation")
+        linearLayout.setOrientation(LinearLayout.HORIZONTAL);
+        linearLayout.addView(checkBox(a_id,uname));
+        return linearLayout;
+    }*/
+
+    private EditText editText(String name, int id){
+         final EditText editText = new EditText(this);
+        editText.setId(id);
+
+        editTextLongList.add(editText);
+        editText.setLayoutParams(fittype);
+        editText.setHint(name);
+
+            return editText;
+
+
+    }
+
+    private EditText dateEditText(int id){
+        EditText dateEditText = new EditText(this);
+        dateEditText.setId(id);
+        setCurrentDate(dateEditText);
+
+        addListerOnButton(dateEditText);
+        datechanged(dateEditText);
+        return dateEditText;
+    }
+
+
+    private Spinner qualifiaction(String options,int id){
+        Spinner spinner = new Spinner(this);
+        spinner.setId(id);
+
+        String[] optionList = options.split(",");
+
+        List<String> spinnerArray =  new ArrayList<String>();
+        spinnerArray.add("Select One");
+        for(String value : optionList){
+            spinnerArray.add(value);
+
+            ArrayAdapter<String> adapter = new ArrayAdapter<String>(
+                    this, android.R.layout.simple_spinner_item, spinnerArray);
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(adapter);
+        }
+        spinnersValue.add(spinner.getSelectedItem().toString());
+
+        spinner.setLayoutParams(fittype);
+
+
+        return spinner;
+
+
+    }
+
+    private RadioGroup radiogroup(String optionRadio,int id){
+
+        final RadioGroup radioGroup = new RadioGroup(getApplicationContext());
+        radioGroup.setId(id);
+        radioGroup.setOrientation(RadioGroup.HORIZONTAL);
+        radioGroup.setLayoutParams(fittype);
+        String[] optionRadioList = optionRadio.split(",");
+
+        final RadioButton[] radioButton = new RadioButton[optionRadioList.length];
+
+        for(int i = 0 ; i<optionRadioList.length;i++){
+
+            radioButton[i] = new RadioButton(this);
+            radioButton[i].setText(optionRadioList[i]);
+            radioButton[i].setId(100 * i);
+            radioGroup.addView(radioButton[i]);
+           // Log.d(TAG,optionRadioList[i]);
+
+        }
+       // int i = radioGroup.getCheckedRadioButtonId();
+       // RadioButton radioButton = (RadioButton) findViewById(i);
+        radioGroupsList.add(radioGroup);
+            return radioGroup;
+    }
+    public void saveData(){
+           // Log.d("DataValue of RadioList",radioGroupsList.size()+" ");
+        for (RadioGroup rdgrp : radioGroupsList) {
+            String selectRB="";
+            int cbid=rdgrp.getId();
+          //  Toast.makeText(getBaseContext(),selectRB+" ",Toast.LENGTH_LONG).show();
+
+            try{
+                int selectedId=rdgrp.getCheckedRadioButtonId();
+                Log.d("DataValue1",selectedId +"");
+                ////System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@radiobutton id=="+selectedId);
+                RadioButton radioButton = (RadioButton) findViewById(selectedId);
+                Log.d("DataValue", radioButton.getText().toString());
+                if(radioButton.isChecked())
+                {
+
+                    //System.out.println("2");
+
+                    selectRB=radioButton.getText().toString();
+                  //  Log.d("DataValue", selectRB);
+                    Toast.makeText(getBaseContext(),selectRB+" Radio value",Toast.LENGTH_LONG).show();
+                    datavalue = radioButton.getText().toString();
+
+                    //values.put("Id_"+cbid, selectRB);
+                    ////System.out.println("-------FD radio  "+"Id_"+cbid+" value "+selectRB) ;
+
+
+                }
+                else{
+                    Toast.makeText(getBaseContext(),selectRB+" Radio value1",Toast.LENGTH_LONG).show();
+
+                }
+            }
+            catch(NullPointerException e){
+                //Toast.makeText(getApplicationContext(), "Error code: fbi540", Toast.LENGTH_SHORT).show();
+                //System.out.println("fbi540 ERROR=="+ e);
+                //.put("Id_"+cbid, selectRB);
+                ////System.out.println("-------FD radio  "+"Id_"+cbid+" value "+selectRB) ;
+            }
+            catch(Exception e){
+                System.out.println("fd1303 ERROR==" + e);
+                Toast.makeText(getApplicationContext(), "Error code: fd1303", Toast.LENGTH_SHORT).show();
+               // values.put("Id_"+cbid, selectRB);
+                System.out.println("-------ee FD radio  "+"Id_"+cbid+" value "+selectRB) ;
+
+            }
+
+        }
+
+    }
+    private CheckBox checkBox(String checkValue, int id){
+        //CheckBoxGroupView group = new CheckBoxGroupView(this);
+
+        CheckBox checkbox = new CheckBox(this);
+        checkbox.setText(checkValue);
+        checkbox.setId(id);
+
+
+        return checkbox;
+
+    }
+
+
+
+
+
+
+
+
+    ///////////////////////////////////////helper Function/////////////////////
+
+    public void setCurrentDate(EditText editText)
+    {  dpResult = new DatePicker(this);
+        //dpResult = (DatePicker)findViewById(R.id.datePicker);
+        final Calendar c= Calendar.getInstance();
+        year=c.get(Calendar.YEAR);
+        month=c.get(Calendar.MONTH);
+        day = c.get(Calendar.DAY_OF_MONTH);
+
+        editText.setText(new StringBuilder().append(day).append("-").append(month+1).append("-").append(year).append(" "));
+        dpResult.init(year, month, day, null);
+
+
+    }
+
+    public void addListerOnButton(EditText editText)
+    {
+
+        editText.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Show your calender here
+
+                showDialog(DATE_DIALOG_ID);
+
+            }
+
+        });
+
+        /*editText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if(hasFocus) {
+
+                    // Show your calender here
+                    showDialog(DATE_DIALOG_ID);
+
+                }
+            }
+        });*/
+
+
+
+    }
+
+    public Dialog onCreateDialog(int id) {
+        switch (id) {
+            case DATE_DIALOG_ID:
+                return new DatePickerDialog(this, datePickerListener, year, month,
+                        day);
+        }
+        return null;
+    }
+    public  void datechanged(final EditText edit) {
+          datePickerListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker datePicker, int selectedYear, int selectedMonth, int selectedDay) {
+                year = selectedYear;
+                month = selectedMonth;
+                day = selectedDay;
+               // datevalue = (new StringBuilder().append(day).append("-").append(month).append("-").append(year).append(" ")).toString();
+                //Log.d(TAG,datevalue.toString());
+                edit.setText(new StringBuilder().append(day).append("-").append(month+1).append("-").append(year).append(" "));
+                dpResult.init(year, month, day, null);
+            }
+        };
+    }
+
+
+
+
+}

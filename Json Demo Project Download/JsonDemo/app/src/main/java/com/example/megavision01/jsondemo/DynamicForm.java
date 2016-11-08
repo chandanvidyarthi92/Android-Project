@@ -51,7 +51,6 @@ public class DynamicForm extends AppCompatActivity {
     private int month;
     private int day;
     public static final int DATE_DIALOG_ID = 999;
-    //EditText tvDisplayDate;
     DatePicker dpResult;
     DatabaseHelper myDb;
     EditText etUsername, etdate;
@@ -75,7 +74,6 @@ public class DynamicForm extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         myDb = new DatabaseHelper(getBaseContext());
-
         final Calendar c = Calendar.getInstance();
         year = c.get(Calendar.YEAR);
         month = c.get(Calendar.MONTH);
@@ -103,7 +101,6 @@ public class DynamicForm extends AppCompatActivity {
                     str_type = cursor.getString(3);
                     str_value = cursor.getString(4);
                     project_id = cursor.getString(1);
-                    Log.d("val", str_id + str_name + str_type + str_value);
 
                     if (str_type.equals("text")) {
                         formLayout.addView(textView(str_name));
@@ -144,47 +141,7 @@ public class DynamicForm extends AppCompatActivity {
             Log.d("Exp", e.toString());
         }
 
-
-
-
-/*
-        if(type[0].equals("text")){
-
-            formLayoutChild.addView(textView(label[0]));
-            formLayoutChild.addView(editText(label[0],id[0]));
-        }*/
-
-       /* if(type[1].equals("date")){
-
-            // setCurrentDate(editText(label[1],id[1]));
-            //addListerOnButton(editText(label[1],id[1]));
-
-            formLayoutChild3.addView(textView(label[1]));
-            formLayoutChild3.addView(editText(label[1],id[1]));
-        }*/
-       /* if(type[2].equals("dropdown")){
-
-            formLayoutChild1.addView(textView(label[2]));
-            formLayoutChild1.addView(qualifiaction(option));
-
-            // editText(label[0],id[0]);
-        }*/
-      /*  if(type[3].equals("radio")){
-
-            formLayoutChild4.addView(textView(label[3]));
-            formLayoutChild4.addView(radiogroup(optionRadio, id[3]));
-        }*/
-       /* if(type[4].equals("checkbox")){
-
-            formLayoutChild5.addView(textView(label[4]));
-            String [] str_chk1=str_name_value.split(",");
-            for(int i=0;i<str_chk1.length;i++)
-            {
-                formLayoutChild5.addView(checkBox(1,str_chk1[i]));
-            }
-        }
-*/
-
+        final RadioButton radioButton =new RadioButton(this);
         Button submit = new Button(this);
         submit.setText("Submit");
         submit.setId(101);
@@ -192,37 +149,13 @@ public class DynamicForm extends AppCompatActivity {
         formLayout.addView(submit);
         setContentView(scrollView);
         submit.setOnClickListener(new View.OnClickListener() {
-    @Override
-    public void onClick(View v) {
-        String idd= getIntent().getStringExtra("id");
-        Toast.makeText(DynamicForm.this,"id is "+idd,Toast.LENGTH_SHORT).show();
-        DatabaseHelper dbhs = new DatabaseHelper(getApplicationContext());
-        SQLiteDatabase db = dbhs.getWritableDatabase();
-        ContentValues values = new ContentValues();
-
-        //String[] strings = new String[editTextLongList.size()];
-        //String abc = etUsername.getText().toString();
-        /* for (int i = 0; i<editTextLongList.size(); i++){
-            strings[i] = editTextLongList.get(i).getText().toString();
-            Toast.makeText(getBaseContext(),strings[i]+"edit",Toast.LENGTH_LONG).show();
-            Log.d("kjkj", "" + strings[i]);
-            //values.put();
-        }*/
-
-        for (EditText editLongText : editTextLongList) {
-            int id_l=editLongText.getId();
-
-            String slnew=editLongText.getText().toString();
-            //Toast.makeText(getBaseContext(),slnew+"",Toast.LENGTH_LONG).show();
-            Log.d("fa",slnew);
-            //values.put("f_values",slnew);
-            //db.insert("myInfo1", null, values);
-            //db.update("myInfo1", values, "ID = ?", new String[]{"2"});
-        }
+            @Override
+             public void onClick(View v) {
+                saveData();
+             }
+        });
     }
-});
 
-    }
 
     private TextView textView(String label) {
         TextView textView = new TextView(this);
@@ -281,8 +214,17 @@ public class DynamicForm extends AppCompatActivity {
         textSpinnerList.add(qualifiactionSpinner.getSelectedItemPosition(), qualifiactionSpinner);
         return qualifiactionSpinner;
     }
+/*    private RadioButton radioButton(int a_id,String strvalue) {   //965
 
-    private RadioGroup radiogroup(String optionRadio, int id) {
+        RadioButton radioButton = new RadioButton(this);
+
+        radioButton.setText(strvalue);
+        textRadioButtonList.add(radioButton);
+
+
+        return radioButton;
+    }*/
+    /*private RadioGroup radiogroup(String optionRadio, int id) {
 
         RadioGroup radioGroup = new RadioGroup(getApplicationContext());
         radioGroup.setId(id);
@@ -299,8 +241,39 @@ public class DynamicForm extends AppCompatActivity {
         }
         textSecRadioGroupList.add(radioGroup);
         return radioGroup;
+    }*/
+
+    private RadioGroup radiogroup(String optionRadio,int id){
+
+        final RadioGroup radioGroup = new RadioGroup(getApplicationContext());
+        radioGroup.setId(id);
+        radioGroup.setOrientation(RadioGroup.HORIZONTAL);
+        radioGroup.setLayoutParams(fittype);
+        String[] optionRadioList = optionRadio.split(",");
+
+        //  final RadioButton[] radioButton = new RadioButton[optionRadioList.length];
+
+        for(int i = 0 ; i<optionRadioList.length;i++){
+
+            radioGroup.addView(radioButton(id+1,optionRadioList[i]));
+            // Log.d(TAG,optionRadioList[i]);
+
+        }
+        // int i = radioGroup.getCheckedRadioButtonId();
+        // RadioButton radioButton = (RadioButton) findViewById(i);
+        textRadioGroupList.add(radioGroup);
+        return radioGroup;
     }
 
+    private RadioButton radioButton(int a_id,String strvalue) {   //965
+
+        RadioButton radioButton = new RadioButton(this);
+        radioButton.setText(strvalue);
+        textRadioButtonList.add(radioButton);
+
+
+        return radioButton;
+    }
     private CheckBox checkBox(int a_id, String strvalue) {
         CheckBox checkBox = new CheckBox(this);
         checkBox.setText(strvalue);
@@ -372,6 +345,178 @@ public class DynamicForm extends AppCompatActivity {
             }
 
     }*/
+
+
+    public void saveData()
+    {
+        /*String idd= getIntent().getStringExtra("id");
+        DatabaseHelper dbhs = new DatabaseHelper(getApplicationContext());
+        SQLiteDatabase db = dbhs.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put("project_id", idd);
+        for (EditText editLongText : editTextLongList) {
+            int id_l=editLongText.getId();
+
+            String slnew=editLongText.getText().toString();
+            Log.d("fa", slnew);
+            values.put("f_id", id_l);
+            values.put("value", slnew);
+            db.insert("dataValue", null, values);
+        }
+*/
+       /* String[] strings1 = new String[textRadioGroupList.size()];
+        for(int i=0; i < textRadioGroupList.size(); i++){
+            strings1[i] = textRadioGroupList.get(i).getText().toString();
+            Toast.makeText(getBaseContext(), strings1[i] + "radio", Toast.LENGTH_LONG).show();
+
+        }*/
+
+
+        for (RadioGroup rdgrp : textRadioGroupList) {
+            String selectRB="";
+            int cbid=rdgrp.getId();
+            //  Toast.makeText(getBaseContext(),selectRB+" ",Toast.LENGTH_LONG).show();
+
+            try{
+                int selectedId=rdgrp.getCheckedRadioButtonId();
+                Log.d("DataValue1",selectedId +"");
+                ////System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@radiobutton id=="+selectedId);
+                RadioButton radioButton = (RadioButton) findViewById(selectedId);
+                Log.d("DataValue", radioButton.getText().toString());
+                if(radioButton.isChecked())
+                {
+
+                    //System.out.println("2");
+
+                    selectRB=radioButton.getText().toString();
+                    //  Log.d("DataValue", selectRB);
+                    Toast.makeText(getBaseContext(),selectRB+" Radio value",Toast.LENGTH_LONG).show();
+                   // datavalue = radioButton.getText().toString();
+
+                    //values.put("Id_"+cbid, selectRB);
+                    ////System.out.println("-------FD radio  "+"Id_"+cbid+" value "+selectRB) ;
+
+
+                }
+                else{
+                    Toast.makeText(getBaseContext(),selectRB+" Radio value1",Toast.LENGTH_LONG).show();
+
+                }
+            }
+            catch(NullPointerException e){
+                //Toast.makeText(getApplicationContext(), "Error code: fbi540", Toast.LENGTH_SHORT).show();
+                //System.out.println("fbi540 ERROR=="+ e);
+                //.put("Id_"+cbid, selectRB);
+                ////System.out.println("-------FD radio  "+"Id_"+cbid+" value "+selectRB) ;
+            }
+            catch(Exception e){
+                System.out.println("fd1303 ERROR==" + e);
+                Toast.makeText(getApplicationContext(), "Error code: fd1303", Toast.LENGTH_SHORT).show();
+                e.printStackTrace();
+                // values.put("Id_"+cbid, selectRB);
+                System.out.println("-------ee FD radio  "+"Id_"+cbid+" value "+selectRB) ;
+
+            }
+
+        }
+
+
+/*
+
+        for (RadioGroup rdgrp : textRadioGroupList) {
+            String selectRB="";
+            int cbid=rdgrp.getId();
+            try{
+                int selectedId=rdgrp.getCheckedRadioButtonId();
+                ////System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@@radiobutton id=="+selectedId);
+                RadioButton radioButton = (RadioButton) findViewById(selectedId);
+                if(radioButton.isChecked())
+                {
+
+                    //System.out.println("2");
+
+                    selectRB=radioButton.getText().toString();
+
+                    values.put("Id_"+cbid, selectRB);
+                    ////System.out.println("-------FD radio  "+"Id_"+cbid+" value "+selectRB) ;
+
+
+                }
+                else{
+
+                }
+            }
+            catch(NullPointerException e){
+                //Toast.makeText(getApplicationContext(), "Error code: fbi540", Toast.LENGTH_SHORT).show();
+                //System.out.println("fbi540 ERROR=="+ e);
+                values.put("Id_"+cbid, selectRB);
+                ////System.out.println("-------FD radio  "+"Id_"+cbid+" value "+selectRB) ;
+            }
+            catch(Exception e){
+                System.out.println("fd1303 ERROR=="+ e);
+                Toast.makeText(getApplicationContext(), "Error code: fd1303", Toast.LENGTH_SHORT).show();
+                values.put("Id_"+cbid, selectRB);
+                System.out.println("-------ee FD radio  "+"Id_"+cbid+" value "+selectRB) ;
+
+            }
+
+        }
+
+
+
+
+
+        // TODO Auto-Branching savedata
+        String rnew="";
+
+        for (RadioGroup rdgrp : textSecRadioGroupList) {
+            String selectRB="";
+            int cbid=rdgrp.getId();
+            try{
+                int selectedId=rdgrp.getCheckedRadioButtonId();
+                ////System.out.println("selectedId"+selectedId);
+                RadioButton radioButton = (RadioButton) findViewById(selectedId);
+                if(radioButton.isChecked())
+                {
+
+                    //System.out.println("2");
+
+                    selectRB=radioButton.getText().toString();
+
+                    //values.put("Id_"+cbid, selectRB);
+                    ////System.out.println("-------FD Branching radio  "+"Id_"+cbid+" value "+selectRB) ;
+
+
+                }
+                else{
+
+                }
+            }
+            catch(NullPointerException e){
+                //Toast.makeText(getApplicationContext(), "Error code: fbi540", Toast.LENGTH_SHORT).show();
+                //System.out.println("fbi540 ERROR=="+ e);
+                //values.put("Id_"+cbid, selectRB);
+                System.out.println("e= "+e+"-------FD Branching radio  "+"Id_"+cbid+" value "+selectRB) ;
+            }
+            catch(Exception e){
+                Toast.makeText(getApplicationContext(), "Error code: fd1349", Toast.LENGTH_SHORT).show();
+                values.put("Id_"+cbid, selectRB);
+                System.out.println("e= "+e+"-------FD Branching radio  "+"Id_"+cbid+" value "+selectRB) ;
+            }
+
+        }
+*/
+/*
+        for (Spinner textSpinner : textSpinnerList) {
+            int id_sp = textSpinner.getId();
+            String sspinner = String.valueOf(textSpinner.getSelectedItem());
+            Log.d("Spinner",sspinner);
+            values.put("f_id", id_sp);
+            values.put("value",sspinner);
+            db.insert("dataValue", null, values);
+            //values.put("Id_"+id_sp, sspinner);
+        }*/
+    }
 
 }
 

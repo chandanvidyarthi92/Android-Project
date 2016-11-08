@@ -62,11 +62,12 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     StringBuffer buffer = new StringBuffer();
                     while (res.moveToNext()) {
-                        buffer.append("form Id  :  " + res.getString(0) + "\n");
+                        buffer.append("Data Id  :  " + res.getString(0) + "\n");
                         buffer.append("Project Id  :  " + res.getString(1) + "\n");
-                        buffer.append("From name  :  " + res.getString(2) + "\n");
-                        buffer.append("Form type   :  " + res.getString(3) + "\n");
+                       buffer.append("Record ID  :  " + res.getString(2) + "\n");
+                        buffer.append("Formid   :  " + res.getString(3) + "\n");
                         buffer.append("Value  :  " + res.getString(4) + "\n");
+                        buffer.append("\n");
 //                        buffer.append("Date  :  " + res.getString(5) + "\n");
                         // buffer.append("Qualification  :  " + res.getString(6) + "\n");
                         // buffer.append("Gender  :  " + res.getString(7) + "\n");

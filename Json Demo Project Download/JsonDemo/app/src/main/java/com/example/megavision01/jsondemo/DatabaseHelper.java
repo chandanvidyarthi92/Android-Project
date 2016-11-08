@@ -12,18 +12,30 @@ import android.util.Log;
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME ="project.db";
+
     public static final String TABLE_NAME = "myProject";
+    public static final String TABLE_NAME1 = "myInfo1";
+    public static final String TABLE_NAME2 = "record";
+    public static final String TABLE_NAME3 = "dataValue";
+
     public static final String id="ID";
     public static final String p_id="P_ID";
     public static final String Project_name="P_NAME";
 
 
-    public static final String TABLE_NAME1 = "myInfo1";
     public static final String Form_Id="F_ID";
     public static final String Project_Id="P_ID";
     public static final String Form_name="f_name";
     public static final String Form_type="f_type";
     public static final String Form_value="f_values";
+
+    public static final String RECORD_ID="r_id";
+
+    public static final String DATA_ID="data_id";
+    public static final String PROJECTID="project_id";
+    public static final String REC_ID="rec_id";
+    public static final String FIELD_ID="f_id";
+    public static final String VALUE="value";
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, 1);
@@ -34,6 +46,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL(" CREATE TABLE " + TABLE_NAME + "(ID INTEGER PRIMARY KEY,P_ID TEXT,P_NAME TEXT)");
         sqLiteDatabase.execSQL(" CREATE TABLE " + TABLE_NAME1 + "(F_ID INTEGER PRIMARY KEY,P_ID INTEGER,f_name TEXT,f_type TEXT,f_values TEXT)");
+        sqLiteDatabase.execSQL(" CREATE TABLE " + TABLE_NAME2 + "(r_id INTEGER PRIMARY KEY,project_id INTEGER)");
+        sqLiteDatabase.execSQL(" CREATE TABLE " + TABLE_NAME3 + "(data_id INTEGER PRIMARY KEY,project_id INTEGER,rec_id INTEGER,f_id INTEGER,value TEXT)");
 
         Log.d("Table", TABLE_NAME + "Table Created");
     }
@@ -42,6 +56,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS" + TABLE_NAME);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS" + TABLE_NAME1);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS" + TABLE_NAME2);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS" + TABLE_NAME3);
 
     }
     public boolean insertData(String Project_id,String project_name)
@@ -95,7 +111,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public Cursor getAllData1()
     {
         SQLiteDatabase db= this.getWritableDatabase();
-        Cursor res =db.rawQuery("select * from " + TABLE_NAME1, null);
+        Cursor res =db.rawQuery("select * from " + TABLE_NAME3, null);
         return res;
     }
 
