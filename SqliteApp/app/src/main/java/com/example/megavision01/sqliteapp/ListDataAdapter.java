@@ -65,7 +65,6 @@ public class ListDataAdapter extends ArrayAdapter<DataProvider> {
        // layoutHandler.PASSWORD.setText(dataProvider.getPassword());
         return row;
 /*
-
         LayoutHandler layoutHandler;
 
         if (convertView == null) {

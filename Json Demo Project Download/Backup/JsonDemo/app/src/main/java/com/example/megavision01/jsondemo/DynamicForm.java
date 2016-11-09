@@ -102,7 +102,7 @@ public class DynamicForm extends Activity {
                     if (str_type.equals("dropdown")) {
 
                         formLayout.addView(textView(str_name));
-                        formLayout.addView(qualifiaction(str_value,str_id));
+                        formLayout.addView(qualifiaction(str_value));
                     }
                     if (str_type.equals("radio")) {
 
@@ -175,9 +175,9 @@ public class DynamicForm extends Activity {
         return editText1;
     }
 
-    private Spinner qualifiaction(String options,int sp_id) {
+    private Spinner qualifiaction(String options) {
         Spinner qualifiactionSpinner = new Spinner(this);
-        qualifiactionSpinner.setId(sp_id);
+        qualifiactionSpinner.setId(1002);
         sp1 = (Spinner) findViewById(qualifiactionSpinner.getId());
         String[] optionList = options.split(",");
         List<String> spinnerArray = new ArrayList<String>();
@@ -212,8 +212,9 @@ public class DynamicForm extends Activity {
 
         RadioButton radioButton = new RadioButton(this);
         radioButton.setText(strvalue);
-       // radioButton.setId(a_id);
         textRadioButtonList.add(radioButton);
+
+
         return radioButton;
     }
     private CheckBox checkBox(int a_id, String strvalue) {
@@ -312,13 +313,14 @@ public class DynamicForm extends Activity {
                 View rb1 = rdgrp.findViewById(selectedId);
                 int idx= rdgrp.indexOfChild(rb1);
                 RadioButton radioButton = (RadioButton) rdgrp.getChildAt(idx);
+                //Log.d("DataValue", radioButton.getText().toString());
                 if(radioButton.isChecked())
                 {
                     selectRB=radioButton.getText().toString();
                     values.put("f_id", selectedId);
                     values.put("value", selectRB);
                     db.insert("dataValue", null, values);
-                    Log.d("DataValue", selectRB);
+                      Log.d("DataValue", selectRB);
                     Toast.makeText(getBaseContext(),selectRB+" Radio value",Toast.LENGTH_LONG).show();
                 }
                 else{
@@ -341,6 +343,8 @@ public class DynamicForm extends Activity {
         for (CheckBox textCheckBox : textCheckBoxList) {
             int id_ck=textCheckBox.getId();
             Log.d("checkbox_id",""+id_ck);
+
+
                 if(textCheckBox.isChecked())
                 {
                     scheckbox=textCheckBox.getText().toString();
@@ -361,6 +365,8 @@ public class DynamicForm extends Activity {
                 else{
                     checkupload=checkupload+","+scheckbox;
                 }
+
+
 
         }
 
