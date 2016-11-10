@@ -78,6 +78,7 @@ public class DynamicForm extends Activity {
         textLayout = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         textLayout.setMargins(10, 0, 10, 0);
         try {
+            /*Getting Project Id from DataListActivity*/
             String id = getIntent().getStringExtra("id");
             DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
             SQLiteDatabase db1 = databaseHelper.getWritableDatabase();
@@ -117,7 +118,6 @@ public class DynamicForm extends Activity {
                             formLayout.addView(checkBox(str_id, str_chk1[i]));
                         }
                     }
-
                 }
                 while (cursor.moveToNext());
             }
@@ -164,7 +164,6 @@ public class DynamicForm extends Activity {
         final EditText editText1 = new EditText(this);
         editText1.setId(id);
         etdate = (EditText) findViewById(editText1.getId());
-        Log.d("dateofbirth","dfsf"+name);
         editText1.setClickable(true);
         editText1.setFocusable(false);
         setCurrentDate(editText1);
@@ -221,7 +220,6 @@ public class DynamicForm extends Activity {
         checkBox.setText(strvalue);
         checkBox.setId(a_id);
         hobby = (CheckBox) findViewById(checkBox.getId());
-        //textCheckBoxList.add(checkBox);
         textCheckBoxList.add(checkBox);
         return checkBox;
     }
@@ -305,21 +303,19 @@ public class DynamicForm extends Activity {
         for (RadioGroup rdgrp : textRadioGroupList) {
             String selectRB="";
             int cbid=rdgrp.getId();
+            Log.d("cbid",""+cbid);
 
             try{
                 int selectedId=rdgrp.getCheckedRadioButtonId();
-                Log.d("DataValue1",selectedId +"");
                 View rb1 = rdgrp.findViewById(selectedId);
                 int idx= rdgrp.indexOfChild(rb1);
                 RadioButton radioButton = (RadioButton) rdgrp.getChildAt(idx);
                 if(radioButton.isChecked())
                 {
                     selectRB=radioButton.getText().toString();
-                    values.put("f_id", selectedId);
+                    values.put("f_id", cbid);
                     values.put("value", selectRB);
                     db.insert("dataValue", null, values);
-                    Log.d("DataValue", selectRB);
-                    Toast.makeText(getBaseContext(),selectRB+" Radio value",Toast.LENGTH_LONG).show();
                 }
                 else{
                     Toast.makeText(getBaseContext(),selectRB+" Radio value1",Toast.LENGTH_LONG).show();
@@ -340,13 +336,11 @@ public class DynamicForm extends Activity {
         String checkupload="";
         for (CheckBox textCheckBox : textCheckBoxList) {
             int id_ck=textCheckBox.getId();
-            Log.d("checkbox_id",""+id_ck);
                 if(textCheckBox.isChecked())
                 {
                     scheckbox=textCheckBox.getText().toString();
                     values.put("value", scheckbox);
                     db.insert("dataValue", null, values);
-                    Log.d("cbid",""+scheckbox);
                 }
                 else
                 {
@@ -367,7 +361,6 @@ public class DynamicForm extends Activity {
         for (Spinner textSpinner : textSpinnerList) {
             int id_sp = textSpinner.getId();
             String sspinner = String.valueOf(textSpinner.getSelectedItem());
-            Log.d("Spinner",sspinner);
             values.put("f_id", id_sp);
             values.put("value",sspinner);
             db.insert("dataValue", null, values);

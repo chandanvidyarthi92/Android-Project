@@ -5,8 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,9 +13,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 import org.json.JSONArray;
@@ -33,7 +29,7 @@ public class MainActivity extends AppCompatActivity {
     Spinner sp1;
     private ProgressDialog pDialog;
     private ListView lv;
-    String a_id;
+    String project_id,form_id;
     Button viewButton;
     // URL to get contacts JSON
     private static String urlProject = "http://androidworkingapp.site88.net/projectlist.php";
@@ -64,14 +60,10 @@ public class MainActivity extends AppCompatActivity {
                     while (res.moveToNext()) {
                         buffer.append("Data Id  :  " + res.getString(0) + "\n");
                         buffer.append("Project Id  :  " + res.getString(1) + "\n");
-                       buffer.append("Record ID  :  " + res.getString(2) + "\n");
+                        buffer.append("Record ID  :  " + res.getString(2) + "\n");
                         buffer.append("Formid   :  " + res.getString(3) + "\n");
                         buffer.append("Value  :  " + res.getString(4) + "\n");
                         buffer.append("\n");
-//                        buffer.append("Date  :  " + res.getString(5) + "\n");
-                        // buffer.append("Qualification  :  " + res.getString(6) + "\n");
-                        // buffer.append("Gender  :  " + res.getString(7) + "\n");
-                        // buffer.append("Hobby  :  " + res.getString(8) + "\n");
 
                     }
                     showMessage("Data", buffer.toString());
@@ -81,9 +73,6 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
-
-
 
 
     private class GetContacts extends AsyncTask<Void, Void, Void> {
@@ -147,7 +136,6 @@ public class MainActivity extends AppCompatActivity {
                         String slabel = c1.getString("slabel");
                         String type = c1.getString("type");
                         String options = c1.getString("options");
-                        Log.d("Valueddd",fid+proj_id+slabel);
 
                         Cursor res1 = myDb.getSingleData1(fid);
                         if(res1.getCount()  == 0 ) {
@@ -191,23 +179,11 @@ public class MainActivity extends AppCompatActivity {
             // Dismiss the progress dialog
             if (pDialog.isShowing())
                 pDialog.dismiss();
-            /**
-             * Updating parsed JSON data into ListView
-             * */
 
-           /*ListAdapter adapter = new SimpleAdapter(
-                    MainActivity.this, contactList,
-                    R.layout.list_item, new String[]{"name",
-                    }, new int[]{R.id.name,
-                    });
-                    lv.setAdapter(adapter);*/
             try {
-                // myDb = new DatabaseHelper(getBaseContext());
                 Cursor res = myDb.getAllData();
                 if (res.moveToFirst()) {
                     do {
-                        //etName.setText(res.getString(1));
-                        //etUserName.setText(res.getString(2));
                         String id= res.getString(1);
                         String project_name= res.getString(2);
                         spinnerArray.add(project_name);
@@ -219,39 +195,49 @@ public class MainActivity extends AppCompatActivity {
             } catch (Exception e) {
                 Log.d("TAG", "username" + e.toString());
             }
-            ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(
-                    MainActivity.this, android.R.layout.simple_spinner_item, spinnerArray);
+            ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_spinner_item, spinnerArray);
             adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             sp1.setAdapter(adapter1);
-           sp1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            sp1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                @Override
                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                    String size = sp1.getSelectedItem().toString();
                    String item = parent.getItemAtPosition(position).toString();
+                   Log.d("itemmmm",item);
                    DatabaseHelper dbh1 = new DatabaseHelper(getApplicationContext());
                    SQLiteDatabase db1 = dbh1.getWritableDatabase();
                    Cursor cursor = db1.rawQuery("Select P_ID from myProject where P_NAME = '"+item+"'", null);
                    if (cursor.moveToFirst()) {
-
                        do {
-                            a_id = cursor.getString(0);
-                           //Toast.makeText(parent.getContext(), "Selected: " + a_id, Toast.LENGTH_LONG).show();
+                           project_id = cursor.getString(0);
                            Intent intent = new Intent(MainActivity.this,DynamicForm.class);
-                           intent.putExtra("id", a_id);
-
+                           intent.putExtra("id", project_id);
                        }
                        while (cursor.moveToNext());
+                   }
+
+                   DatabaseHelper dbh2 = new DatabaseHelper(getApplicationContext());
+                   SQLiteDatabase db2 = dbh2.getWritableDatabase();
+                   Cursor cursor2 = db2.rawQuery("Select f_id from datavalue where project_id ='"+project_id+"' Limit 1", null);
+                   if (cursor2.moveToFirst()) {
+                       do {
+                           form_id  = cursor2.getString(0);
+                           Intent intent = new Intent(MainActivity.this,DynamicForm.class);
+                           intent.putExtra("form_id", form_id);
+                           Log.d("formid",form_id);
+                       }
+                       while (cursor2.moveToNext());
                    }
                    Button btnSubmit = (Button) findViewById(R.id.btnSubmit);
                    btnSubmit.setOnClickListener(new View.OnClickListener() {
                        @Override
                        public void onClick(View v) {
-                           Intent intent = new Intent(MainActivity.this, DynamicForm.class);
-                           intent.putExtra("id", a_id);
+                           Intent intent = new Intent(MainActivity.this, DataListActivity.class);
+                           intent.putExtra("id", project_id);
+                           intent.putExtra("f_id",form_id);
                            startActivity(intent);
                        }
                    });
-
                }
 
                @Override
@@ -262,7 +248,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
-
 
     public void showMessage(String title, String msg)
     {

@@ -64,7 +64,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     {
         SQLiteDatabase db =this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put(p_id,Project_id);
+        contentValues.put(p_id, Project_id);
         contentValues.put(Project_name, project_name);
         long resultset =db.insert(TABLE_NAME,null,contentValues);
         if(resultset == -1)
@@ -113,6 +113,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db= this.getWritableDatabase();
         Cursor res =db.rawQuery("select * from " + TABLE_NAME3, null);
         return res;
+    }
+    public Cursor getInformation(String id,String form_Id)
+    {
+        SQLiteDatabase db= this.getWritableDatabase();
+        Cursor cursor;
+        //cursor =db.rawQuery("select * from " + TABLE_NAME3 +" where project_id = '"+id+"'", null);
+        cursor =db.rawQuery("select * from " + TABLE_NAME3 +" where project_id = '"+id+"' and f_id = '"+form_Id+"'", null);
+        return cursor;
     }
 
 }
