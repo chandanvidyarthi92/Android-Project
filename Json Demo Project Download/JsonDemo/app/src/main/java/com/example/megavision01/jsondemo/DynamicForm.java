@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
@@ -136,6 +137,8 @@ public class DynamicForm extends Activity {
             @Override
              public void onClick(View v) {
                 saveData();
+                Intent intent = new Intent(DynamicForm.this,MainActivity.class);
+                startActivity(intent);
              }
         });
     }
@@ -232,9 +235,6 @@ public class DynamicForm extends Activity {
         return datePicker;
     }
 
-
-
-
     public void setCurrentDate(EditText editText1) {
         dpResult = new DatePicker(this);
         //dpResult = (DatePicker)findViewById(R.id.datePicker);
@@ -276,11 +276,13 @@ public class DynamicForm extends Activity {
 
     public void saveData()
     {
+        int rd=1;
         String idd= getIntent().getStringExtra("id");
         DatabaseHelper dbhs = new DatabaseHelper(getApplicationContext());
         SQLiteDatabase db = dbhs.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put("project_id", idd);
+        values.put("rec_id", rd);
 
         for (EditText editLongText : editTextLongList) {
             int id_l=editLongText.getId();
@@ -291,14 +293,6 @@ public class DynamicForm extends Activity {
             values.put("value", slnew);
             db.insert("dataValue", null, values);
         }
-
-       /* String[] strings1 = new String[textRadioGroupList.size()];
-        for(int i=0; i < textRadioGroupList.size(); i++){
-            strings1[i] = textRadioGroupList.get(i).getText().toString();
-            Toast.makeText(getBaseContext(), strings1[i] + "radio", Toast.LENGTH_LONG).show();
-
-        }*/
-
 
         for (RadioGroup rdgrp : textRadioGroupList) {
             String selectRB="";
@@ -366,6 +360,11 @@ public class DynamicForm extends Activity {
             db.insert("dataValue", null, values);
             //values.put("Id_"+id_sp, sspinner);
         }
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("r_id",rd);
+        db.insert("record", null, contentValues);
+        rd++;
     }
 
 }

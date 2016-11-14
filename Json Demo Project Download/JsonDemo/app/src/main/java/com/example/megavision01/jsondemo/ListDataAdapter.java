@@ -24,7 +24,7 @@ public class ListDataAdapter extends ArrayAdapter<DataProvider> {
         super(context, resource);
     }
 
-    static class LayoutHandler
+    public class LayoutHandler
     {
         TextView ID,NAME;
     }

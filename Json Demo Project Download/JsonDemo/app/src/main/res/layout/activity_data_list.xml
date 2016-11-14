@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:background="@drawable/bc2"
     android:orientation="horizontal"
-    tools:context=".DataListActivity">
+    tools:context=".DataListActivity"
+    >
 
     <ListView
         android:layout_width="match_parent"

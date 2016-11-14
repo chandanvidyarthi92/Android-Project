@@ -21,4 +21,9 @@
         android:icon="@drawable/ic_delete"
         app:showAsAction="always">
     </item>
+    <item
+        android:id="@+id/addNew"
+        android:title="Add New"
+        app:showAsAction="never">
+    </item>
 </menu>

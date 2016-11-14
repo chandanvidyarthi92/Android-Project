@@ -60,7 +60,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS" + TABLE_NAME3);
 
     }
-    public boolean insertData(String Project_id,String project_name)
+    public boolean insertProject(String Project_id,String project_name)
     {
         SQLiteDatabase db =this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -73,7 +73,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return true;
     }
 
-    public boolean insertData1(String Project_id,String label,String type,String option)
+    public boolean insertForm(String Project_id,String label,String type,String option)
     {
         SQLiteDatabase db =this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -89,38 +89,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             return true;
     }
 
-    public Cursor getSingleData(String id)
-    {
-        SQLiteDatabase db= this.getWritableDatabase();
-        Cursor res =db.rawQuery("select * from " + TABLE_NAME+" where ID = '"+id+"'", null);
-        return res;
-    }
-    public Cursor getSingleData1(String fid)
-    {
-        SQLiteDatabase db= this.getWritableDatabase();
-        Cursor res =db.rawQuery("select * from " + TABLE_NAME1+" where F_ID = '"+fid+"'", null);
-        return res;
-    }
-
     public Cursor getAllData()
     {
         SQLiteDatabase db= this.getWritableDatabase();
         Cursor res =db.rawQuery("select * from " + TABLE_NAME, null);
         return res;
     }
-    public Cursor getAllData1()
-    {
-        SQLiteDatabase db= this.getWritableDatabase();
-        Cursor res =db.rawQuery("select * from " + TABLE_NAME3, null);
-        return res;
-    }
-    public Cursor getInformation(String id,String form_Id)
-    {
-        SQLiteDatabase db= this.getWritableDatabase();
-        Cursor cursor;
-        //cursor =db.rawQuery("select * from " + TABLE_NAME3 +" where project_id = '"+id+"'", null);
-        cursor =db.rawQuery("select * from " + TABLE_NAME3 +" where project_id = '"+id+"' and f_id = '"+form_Id+"'", null);
-        return cursor;
-    }
-
 }

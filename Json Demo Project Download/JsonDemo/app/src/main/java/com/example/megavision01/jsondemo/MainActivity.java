@@ -24,13 +24,15 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    DatabaseHelper myDb;
+    //DatabaseHelper myDb;
+    DatabaseHelper databaseHelper;
+    SQLiteDatabase db;
     private String TAG = MainActivity.class.getSimpleName();
-    Spinner sp1;
+    Spinner spProjectList;
     private ProgressDialog pDialog;
-    private ListView lv;
-    String project_id,form_id;
+    String project_id;
     Button viewButton;
+
     // URL to get contacts JSON
     private static String urlProject = "http://androidworkingapp.site88.net/projectlist.php";
     private static String urlForm = "http://androidworkingapp.site88.net//formdesign.php";
@@ -42,16 +44,17 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        myDb = new DatabaseHelper(getBaseContext());
+        databaseHelper = new DatabaseHelper(getBaseContext());
+        db= databaseHelper.getWritableDatabase();
+
         contactList = new ArrayList<>();
-        sp1 = (Spinner) findViewById(R.id.sp1);
-        //lv = (ListView) findViewById(R.id.list);
+        spProjectList = (Spinner) findViewById(R.id.sp1);
         new GetContacts().execute();
         viewButton= (Button) findViewById(R.id.btnView);
         viewButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Cursor res = myDb.getAllData1();
+                Cursor res =db.rawQuery("select * from dataValue", null);
                 if (res.getCount() == 0) {
                     Toast.makeText(MainActivity.this, "Nothing Found !!", Toast.LENGTH_SHORT).show();
                     return;
@@ -113,15 +116,14 @@ public class MainActivity extends AppCompatActivity {
                         HashMap<String, String> contact = new HashMap<>();
                         contact.put("id", idd);
                         contact.put("name", name);
-                        Cursor res1 = myDb.getSingleData(idd);
-
-                        if(res1.getCount() == 0 ) {
-                            boolean isInserted = myDb.insertData(idd, name);
+                        Cursor res = db.rawQuery("select * from myProject where ID ='"+idd+"'",null);
+                        if(res.getCount() == 0 ) {
+                            boolean isInserted = databaseHelper.insertProject(idd, name);
                             if (isInserted == true) {
                                 Log.d("row inserted", idd + name);
 
                             } else
-                                Toast.makeText(MainActivity.this, "Data Not Inerted", Toast.LENGTH_LONG).show();
+                                Toast.makeText(MainActivity.this, "Data Not Inserted", Toast.LENGTH_LONG).show();
                         }
                         contactList.add(contact);
 
@@ -137,12 +139,12 @@ public class MainActivity extends AppCompatActivity {
                         String type = c1.getString("type");
                         String options = c1.getString("options");
 
-                        Cursor res1 = myDb.getSingleData1(fid);
-                        if(res1.getCount()  == 0 ) {
-                            boolean isInserted = myDb.insertData1( proj_id, slabel, type, options);
+                        Cursor res=db.rawQuery("select * from myInfo1 where F_ID = '" + fid + "'", null);
+                        if(res.getCount()  == 0 ) {
+                            boolean isInserted = databaseHelper.insertForm(proj_id, slabel, type, options);
                             if (isInserted == true) {
                             } else
-                                Toast.makeText(MainActivity.this, "Data Not Inerted", Toast.LENGTH_LONG).show();
+                                Toast.makeText(MainActivity.this, "Data Not Inserted", Toast.LENGTH_LONG).show();
                         }
                     }
                 } catch (final JSONException e) {
@@ -181,7 +183,7 @@ public class MainActivity extends AppCompatActivity {
                 pDialog.dismiss();
 
             try {
-                Cursor res = myDb.getAllData();
+                Cursor res = databaseHelper.getAllData();
                 if (res.moveToFirst()) {
                     do {
                         String id= res.getString(1);
@@ -197,44 +199,28 @@ public class MainActivity extends AppCompatActivity {
             }
             ArrayAdapter<String> adapter1 = new ArrayAdapter<String>(MainActivity.this, android.R.layout.simple_spinner_item, spinnerArray);
             adapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            sp1.setAdapter(adapter1);
-            sp1.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            spProjectList.setAdapter(adapter1);
+            spProjectList.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                @Override
                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                   String size = sp1.getSelectedItem().toString();
+                   String size = spProjectList.getSelectedItem().toString();
                    String item = parent.getItemAtPosition(position).toString();
-                   Log.d("itemmmm",item);
-                   DatabaseHelper dbh1 = new DatabaseHelper(getApplicationContext());
-                   SQLiteDatabase db1 = dbh1.getWritableDatabase();
-                   Cursor cursor = db1.rawQuery("Select P_ID from myProject where P_NAME = '"+item+"'", null);
+                   databaseHelper = new DatabaseHelper(getApplicationContext());
+                   SQLiteDatabase db = databaseHelper.getWritableDatabase();
+                   Cursor cursor = db.rawQuery("Select P_ID from myProject where P_NAME = '" + item +"'", null);
                    if (cursor.moveToFirst()) {
                        do {
                            project_id = cursor.getString(0);
-                           Intent intent = new Intent(MainActivity.this,DynamicForm.class);
-                           intent.putExtra("id", project_id);
                        }
                        while (cursor.moveToNext());
                    }
 
-                   DatabaseHelper dbh2 = new DatabaseHelper(getApplicationContext());
-                   SQLiteDatabase db2 = dbh2.getWritableDatabase();
-                   Cursor cursor2 = db2.rawQuery("Select f_id from datavalue where project_id ='"+project_id+"' Limit 1", null);
-                   if (cursor2.moveToFirst()) {
-                       do {
-                           form_id  = cursor2.getString(0);
-                           Intent intent = new Intent(MainActivity.this,DynamicForm.class);
-                           intent.putExtra("form_id", form_id);
-                           Log.d("formid",form_id);
-                       }
-                       while (cursor2.moveToNext());
-                   }
                    Button btnSubmit = (Button) findViewById(R.id.btnSubmit);
                    btnSubmit.setOnClickListener(new View.OnClickListener() {
                        @Override
                        public void onClick(View v) {
                            Intent intent = new Intent(MainActivity.this, DataListActivity.class);
                            intent.putExtra("id", project_id);
-                           intent.putExtra("f_id",form_id);
                            startActivity(intent);
                        }
                    });
