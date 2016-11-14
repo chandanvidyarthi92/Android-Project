@@ -9,6 +9,9 @@ import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -113,10 +116,7 @@ public class MainActivity extends AppCompatActivity {
                         JSONObject c = contacts.getJSONObject(i);
                         String idd = c.getString("proj_id");
                         String name = c.getString("proj_name");
-                        HashMap<String, String> contact = new HashMap<>();
-                        contact.put("id", idd);
-                        contact.put("name", name);
-                        Cursor res = db.rawQuery("select * from myProject where ID ='"+idd+"'",null);
+                        Cursor res = db.rawQuery("select * from myProject where P_ID ='"+idd+"'",null);
                         if(res.getCount() == 0 ) {
                             boolean isInserted = databaseHelper.insertProject(idd, name);
                             if (isInserted == true) {
@@ -125,7 +125,6 @@ public class MainActivity extends AppCompatActivity {
                             } else
                                 Toast.makeText(MainActivity.this, "Data Not Inserted", Toast.LENGTH_LONG).show();
                         }
-                        contactList.add(contact);
 
                     }
 
@@ -241,6 +240,24 @@ public class MainActivity extends AppCompatActivity {
         builder.setTitle(title);
         builder.setMessage(msg);
         builder.show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.refresh, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(R.id.refresh== item.getItemId())
+        {
+            Intent intent = new Intent(MainActivity.this,MainActivity.class);
+            intent.putExtra("id",project_id);
+            startActivity(intent);
+        }
+
+        return super.onOptionsItemSelected(item);
     }
     }
 

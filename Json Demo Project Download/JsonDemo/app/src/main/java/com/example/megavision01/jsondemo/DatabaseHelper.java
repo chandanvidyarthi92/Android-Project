@@ -12,13 +12,15 @@ import android.util.Log;
  */
 public class DatabaseHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME ="project.db";
-
+    public static final String LOGIN = "login";
     public static final String TABLE_NAME = "myProject";
     public static final String TABLE_NAME1 = "myInfo1";
     public static final String TABLE_NAME2 = "record";
     public static final String TABLE_NAME3 = "dataValue";
 
     public static final String id="ID";
+    public static final String usernmae="USERNAME";
+    public static final String password="PASSWORD";
     public static final String p_id="P_ID";
     public static final String Project_name="P_NAME";
 
@@ -48,6 +50,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL(" CREATE TABLE " + TABLE_NAME1 + "(F_ID INTEGER PRIMARY KEY,P_ID INTEGER,f_name TEXT,f_type TEXT,f_values TEXT)");
         sqLiteDatabase.execSQL(" CREATE TABLE " + TABLE_NAME2 + "(r_id INTEGER PRIMARY KEY,project_id INTEGER)");
         sqLiteDatabase.execSQL(" CREATE TABLE " + TABLE_NAME3 + "(data_id INTEGER PRIMARY KEY,project_id INTEGER,rec_id INTEGER,f_id INTEGER,value TEXT)");
+        sqLiteDatabase.execSQL(" CREATE TABLE " + LOGIN + "(ID INTEGER PRIMARY KEY,USERNAME TEXT,PASSWORD TEXT)");
 
         Log.d("Table", TABLE_NAME + "Table Created");
     }
@@ -58,6 +61,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS" + TABLE_NAME1);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS" + TABLE_NAME2);
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS" + TABLE_NAME3);
+        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS" + LOGIN);
 
     }
     public boolean insertProject(String Project_id,String project_name)
@@ -84,6 +88,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         contentValues.put(Form_value,option);
         long resultset1 =db.insert(TABLE_NAME1,null,contentValues);
         if(resultset1 == -1)
+            return false;
+        else
+            return true;
+    }
+    public boolean RegForm(String uname,String pass)
+    {
+        SQLiteDatabase db =this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(usernmae,uname);
+        contentValues.put(password,pass);
+        long resultset =db.insert(LOGIN,null,contentValues);
+        if(resultset == -1)
             return false;
         else
             return true;

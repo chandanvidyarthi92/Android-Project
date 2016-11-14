@@ -44,6 +44,18 @@
         android:text="Submit"/>
 
     <Button
+        android:id="@+id/btnUpload"
+        android:onClick="displayForm"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:layout_gravity="center_horizontal"
+        android:backgroundTint="#032727"
+        android:textColor="#F0FBFB"
+        android:background="@drawable/file1"
+        android:text="Upload Form"/>
+
+    <Button
         android:id="@+id/btnView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

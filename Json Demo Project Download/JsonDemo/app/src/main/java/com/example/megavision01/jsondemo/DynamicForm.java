@@ -60,6 +60,7 @@ public class DynamicForm extends Activity {
     String str_name = "", str_type = "", str_value = "", project_id = "";
     String TAG = DynamicForm.class.getSimpleName();
     int str_id = 0;
+    String id;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +81,7 @@ public class DynamicForm extends Activity {
         textLayout.setMargins(10, 0, 10, 0);
         try {
             /*Getting Project Id from DataListActivity*/
-            String id = getIntent().getStringExtra("id");
+            id = getIntent().getStringExtra("id");
             DatabaseHelper databaseHelper = new DatabaseHelper(getApplicationContext());
             SQLiteDatabase db1 = databaseHelper.getWritableDatabase();
             Cursor cursor = db1.rawQuery("select * from myInfo1 where P_ID='"+id+"'", null);
@@ -137,7 +138,8 @@ public class DynamicForm extends Activity {
             @Override
              public void onClick(View v) {
                 saveData();
-                Intent intent = new Intent(DynamicForm.this,MainActivity.class);
+                Intent intent = new Intent(DynamicForm.this,DataListActivity.class);
+                intent.putExtra("id",id);
                 startActivity(intent);
              }
         });
@@ -361,10 +363,7 @@ public class DynamicForm extends Activity {
             //values.put("Id_"+id_sp, sspinner);
         }
 
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("r_id",rd);
-        db.insert("record", null, contentValues);
-        rd++;
+
     }
 
 }

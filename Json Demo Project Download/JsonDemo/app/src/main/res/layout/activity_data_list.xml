@@ -6,9 +6,11 @@
     android:layout_height="match_parent"
     android:background="@drawable/bc2"
     android:orientation="horizontal"
-    tools:context=".DataListActivity"
-    >
-
+    tools:context=".DataListActivity">
+    <HorizontalScrollView
+        android:id="@+id/hScrollView01"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
     <ListView
         android:layout_width="match_parent"
         android:id="@+id/listView"
@@ -16,6 +18,6 @@
         android:layout_height="wrap_content"
         android:verticalSpacing="3dp">
     </ListView>
-
+</HorizontalScrollView>
 </LinearLayout>
 
